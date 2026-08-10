@@ -1,11 +1,4 @@
-<?php
-// Onyesha makosa yoyote kwa ajili ya debugging
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    $phone = $<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
@@ -198,7 +191,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: var(--secondary-color);
         }
 
-        /* Footer */
         footer {
             background: var(--dark-color);
             color: white;
@@ -252,8 +244,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="feature-item">
                 <i class="fa-solid fa-mobile-screen-button"></i>
                 <div>
-                    <h4>Malipo Salama kwa Simu</h4>
-                    <p style="font-size:13px; color:#666;">Inasawazishwa kikamilifu na AzamPay (Airtel, Tigo, M-Pesa, HaloPesa).</p>
+                    <h4>Malipo Salama kwa Simu & Kadi</h4>
+                    <p style="font-size:13px; color:#666;">Inasawazishwa kikamilifu na Pesapal (M-Pesa, Tigo, Airtel, Halopesa & Visa/Mastercard).</p>
                 </div>
             </div>
         </div>
@@ -262,10 +254,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="payment-card">
             <h2><i class="fa-solid fa-cart-shopping"></i> Agiza / Lipia Dawa</h2>
 
-            <form action="https://drpayment.onrender.com/process_payment.php" method="POST">
+            <form id="paymentForm">
                 <div class="form-group">
                     <label><i class="fa-solid fa-prescription-bottle-medical"></i> Chagua Dawa / Huduma:</label>
-                    <select name="product_name" required>
+                    <select name="product_name" id="product_name" required>
                         <option value="Dawa ya Detox & Safisha Mwili">Dawa ya Safisha Mwili (Detox)</option>
                         <option value="Lishe & Nguvu za Mwili">Lishe Bora ya Nguvu za Mwili</option>
                         <option value="Ushauri wa Tiba Asili">Ada ya Ushauri wa Daktari</option>
@@ -274,117 +266,61 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <div class="form-group">
                     <label><i class="fa-solid fa-phone"></i> Namba ya Simu ya Kulipia:</label>
-                    <input type="text" name="phone_number" value="255712345678" placeholder="Mfano: 2557XXXXXXXX" required>
+                    <input type="text" id="phone_number" name="phone_number" placeholder="Mfano: 2557XXXXXXXX" required>
                 </div>
 
                 <div class="form-group">
                     <label><i class="fa-solid fa-money-bill-wave"></i> Kiasi cha Kulipa (TZS):</label>
-                    <input type="number" name="amount" value="1000" min="100" required>
+                    <input type="number" id="amount" name="amount" value="1000" min="100" required>
                 </div>
 
-                <div class="form-group">
-                    <label><i class="fa-solid fa-wallet"></i> Chagua Mtandao wa Simu:</label>
-                    <select name="provider" required>
-                        <option value="Airtel">Airtel Money</option>
-                        <option value="Tigo">Tigo Pesa</option>
-                        <option value="Mpesa">M-Pesa (Vodacom)</option>
-                        <option value="Halopesa">Halo Pesa</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-pay">
-                    <i class="fa-solid fa-lock"></i> LIPA SASA KWA AZAMPAY
+                <button type="submit" class="btn-pay" id="payBtn">
+                    <i class="fa-solid fa-lock"></i> LIPA SASA KWA PESAPAL
                 </button>
             </form>
         </div>
 
     </div>
 
-    <!-- Footer -->
     <footer>
         <p>&copy; 2026 Dr William Herbal Clinic. Haki zote zimehifadhiwa.</p>
     </footer>
 
+    <script>
+        document.getElementById('paymentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('payBtn');
+            btn.innerText = 'Tafadhali subiri...';
+            btn.disabled = true;
+
+            const data = {
+                phone: document.getElementById('phone_number').value,
+                amount: document.getElementById('amount').value,
+                product: document.getElementById('product_name').value
+            };
+
+            fetch('https://drpayment.onrender.com/process_payment.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(resData => {
+                if(resData.status === 'success' && resData.redirect_url) {
+                    window.location.href = resData.redirect_url;
+                } else {
+                    alert('Imefeli: ' + (resData.message || 'Kosa limetokea.'));
+                    btn.innerText = 'LIPA SASA KWA PESAPAL';
+                    btn.disabled = false;
+                }
+            })
+            .catch(err => {
+                alert('Tafadhali jaribu tena baadaye.');
+                btn.innerText = 'LIPA SASA KWA PESAPAL';
+                btn.disabled = false;
+            });
+        });
+    </script>
 </body>
 </html>
-    // =========================================================
-    // WEKA CLIENT ID NA CLIENT SECRET ZAKO HALISI HAPA CHINI:
-    // =========================================================
-    $clientId = "WEKA_CLIENT_ID_YAKO_HAPA";
-    $clientSecret = "WEKA_CLIENT_SECRET_YAKO_HAPA";
-    $appName = "Dr william duka";
-
-    echo "<h2>Mchakato wa Malipo - Dr William Clinic</h2>";
-    echo "<p>Bidhaa: <b>" . htmlspecialchars($product) . "</b></p>";
-    echo "<p>1. Inaanza kuomba Access Token kutoka AzamPay...</p>";
-
-    // --- HATUA YA A: KUOMBA ACCESS TOKEN ---
-    $tokenUrl = "https://authenticator-sandbox.azampay.co.tz/AppAuthentication/generateToken";
-    
-    $tokenPayload = json_encode([
-        'appName' => $appName,
-        'clientId' => $clientId,
-        'clientSecret' => $clientSecret
-    ]);
-
-    $ch = curl_init($tokenUrl);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $tokenPayload);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    
-    $tokenResponse = curl_exec($ch);
-    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-    curl_close($ch);
-
-    $tokenResult = json_decode($tokenResponse, true);
-
-    if (!isset($tokenResult['data']['accessToken'])) {
-        echo "<b style='color:red;'>⚠️ IMEFELI KUPATA TOKEN!</b><br>";
-        echo "Hakikisha umebadilisha Client ID na Client Secret kwenye process_payment.php<br><br>";
-        echo "HTTP Code: " . $httpCode . "<br>";
-        echo "Majibu kutoka AzamPay: <pre>" . htmlspecialchars($tokenResponse) . "</pre>";
-        exit;
-    }
-
-    $accessToken = $tokenResult['data']['accessToken'];
-    echo "<b style='color:green;'>✓ Token Imepatikana Vizuri!</b><br><br>";
-
-    // --- HATUA YA B: KUTUMA OMBI LA CHECKOUT ---
-    echo "<p>2. Inatuma ombi la Checkout ($provider - TZS $amount)...</p>";
-
-    $checkoutUrl = "https://sandbox.azampay.co.tz/azampay/mno/checkout";
-
-    $paymentPayload = json_encode([
-        'accountNumber' => $phone,
-        'amount' => (string)$amount,
-        'currency' => 'TZS',
-        'externalId' => 'TEST-' . time(),
-        'provider' => $provider
-    ]);
-
-    $ch2 = curl_init($checkoutUrl);
-    curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch2, CURLOPT_POST, true);
-    curl_setopt($ch2, CURLOPT_POSTFIELDS, $paymentPayload);
-    curl_setopt($ch2, CURLOPT_HTTPHEADER, [
-        'Authorization: Bearer ' . $accessToken,
-        'Content-Type: application/json'
-    ]);
-    curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
-
-    $paymentResponse = curl_exec($ch2);
-    $payHttpCode = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
-    curl_close($ch2);
-
-    echo "<b style='color:green;'>✓ Ombi la Malipo Limetumwa AzamPay! (HTTP Code: $payHttpCode)</b><br>";
-    echo "<h4>Majibu kutoka AzamPay:</h4>";
-    echo "<pre style='background:#e9f5e9; padding:15px; border-radius:5px; border:1px solid #c3e6cb;'>" . htmlspecialchars($paymentResponse) . "</pre>";
-    
-    echo "<hr>";
-    echo "📌 <b>Hatua Inayofuata:</b> Fungua ukurasa wako wa <a href='https://webhook.site/aef6f3d0-791e-49a4-a9f3-4d5d4783b281' target='_blank'>Webhook.site</a> kuona taarifa zilizotumwa na AzamPay zikithibitisha muamala huu!";
-} else {
-    echo "Tafadhali tumia fomu ya <a href='index.php'>index.php</a> kulipa.";
-}
-?>
