@@ -73,7 +73,7 @@ if (!$token) {
     exit;
 }
 
-// 2. Sajili au Omba IPN ID (Inahitajika lazima na Pesapal v3)
+// 2. Sajili na Omba IPN ID (Inahitajika lazima na Pesapal v3)
 $ipnPayload = [
     "url" => "https://biotech-america-reseach.github.io/drpayment/",
     "ipn_notification_type" => "GET"
