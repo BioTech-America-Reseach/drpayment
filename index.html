@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr William Herbal Clinic | Tiba na Ushauri wa Afya ya Asili</title>
+    <!-- Google Fonts & FontAwesome Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #1b5e20;
+            --accent-color: #81c784;
+            --dark-color: #1c2a1d;
+            --light-bg: #f4f8f5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* Navigation Header */
+        header {
+            background: #ffffff;
+            padding: 15px 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .logo i {
+            font-size: 28px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), url('https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .hero h1 {
+            font-size: 38px;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 25px;
+            color: #e0e0e0;
+        }
+
+        /* Container Layout */
+        .main-container {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 { font-size: 28px; }
+        }
+
+        /* Info Section */
+        .info-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .info-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .feature-item i {
+            background: #e8f5e9;
+            color: var(--primary-color);
+            padding: 12px;
+            border-radius: 50%;
+            font-size: 18px;
+        }
+
+        /* Payment Form Card */
+        .payment-card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-top: 5px solid var(--primary-color);
+        }
+
+        .payment-card h2 {
+            color: var(--dark-color);
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #444;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #cccccc;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 5px rgba(46, 125, 50, 0.3);
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s background;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-pay:hover {
+            background: var(--secondary-color);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-color);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="logo">
+            <i class="fa-solid fa-leaf"></i>
+            <span>DR WILLIAM CLINIC</span>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Tiba Asili na Afya ya Uzazi</h1>
+        <p>Mwarobaini wa Changamoto za Kimwili na Lishe Bora ya Kiasili kwa Afya Yako na Familia Yako.</p>
+    </section>
+
+    <!-- Main Content Area -->
+    <div class="main-container">
+
+        <!-- Left Side: Information -->
+        <div class="info-card">
+            <h2><i class="fa-solid fa-kit-medical"></i> Huduma Zetu za Asili</h2>
+            <p style="margin-bottom: 25px; color: #555;">Tunasambaza dawa salama zilizotengenezwa kwa mimea na matunda ya asili zisizo na kemikali mbaya.</p>
+
+            <div class="feature-item">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div>
+                    <h4>100% Organiki & Salama</h4>
+                    <p style="font-size:13px; color:#666;">Zimetengenezwa kitaalamu kutokana na mimea tiba bora ya asili.</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <i class="fa-solid fa-truck-fast"></i>
+                <div>
+                    <h4>Ufikishaji wa Haraka</h4>
+                    <p style="font-size:13px; color:#666;">Unakamilisha malipo kwa mtandao na kupokea dawa yako popote ulipo.</p>
+                </div>
+            </div>
+
+            <div class="feature-item">
+                <i class="fa-solid fa-mobile-screen-button"></i>
+                <div>
+                    <h4>Malipo Salama kwa Simu</h4>
+                    <p style="font-size:13px; color:#666;">Inasawazishwa kikamilifu na AzamPay (Airtel, Tigo, M-Pesa, HaloPesa).</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Side: Order & Payment Form -->
+        <div class="payment-card">
+            <h2><i class="fa-solid fa-cart-shopping"></i> Agiza / Lipia Dawa</h2>
+
+            <form action="process_payment.php" method="POST">
+                <div class="form-group">
+                    <label><i class="fa-solid fa-prescription-bottle-medical"></i> Chagua Dawa / Huduma:</label>
+                    <select name="product_name" required>
+                        <option value="Dawa ya Detox & Safisha Mwili">Dawa ya Safisha Mwili (Detox)</option>
+                        <option value="Lishe & Nguvu za Mwili">Lishe Bora ya Nguvu za Mwili</option>
+                        <option value="Ushauri wa Tiba Asili">Ada ya Ushauri wa Daktari</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-phone"></i> Namba ya Simu ya Kulipia:</label>
+                    <input type="text" name="phone_number" value="255712345678" placeholder="Mfano: 2557XXXXXXXX" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-money-bill-wave"></i> Kiasi cha Kulipa (TZS):</label>
+                    <input type="number" name="amount" value="1000" min="100" required>
+                </div>
+
+                <div class="form-group">
+                    <label><i class="fa-solid fa-wallet"></i> Chagua Mtandao wa Simu:</label>
+                    <select name="provider" required>
+                        <option value="Airtel">Airtel Money</option>
+                        <option value="Tigo">Tigo Pesa</option>
+                        <option value="Mpesa">M-Pesa (Vodacom)</option>
+                        <option value="Halopesa">Halo Pesa</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-pay">
+                    <i class="fa-solid fa-lock"></i> LIPA SASA KWA AZAMPAY
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Dr William Herbal Clinic. Haki zote zimehifadhiwa.</p>
+    </footer>
+
+</body>
+</html>
