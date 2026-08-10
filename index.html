@@ -1,4 +1,11 @@
-<!DOCTYPE html>
+<?php
+// Onyesha makosa yoyote kwa ajili ya debugging
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $phone = $<!DOCTYPE html>
 <html lang="sw">
 <head>
     <meta charset="UTF-8">
@@ -255,7 +262,7 @@
         <div class="payment-card">
             <h2><i class="fa-solid fa-cart-shopping"></i> Agiza / Lipia Dawa</h2>
 
-            <form action="process_payment.php" method="POST">
+            <form action="https://drpayment.onrender.com/process_payment.php" method="POST">
                 <div class="form-group">
                     <label><i class="fa-solid fa-prescription-bottle-medical"></i> Chagua Dawa / Huduma:</label>
                     <select name="product_name" required>
@@ -300,3 +307,84 @@
 
 </body>
 </html>
+    // =========================================================
+    // WEKA CLIENT ID NA CLIENT SECRET ZAKO HALISI HAPA CHINI:
+    // =========================================================
+    $clientId = "WEKA_CLIENT_ID_YAKO_HAPA";
+    $clientSecret = "WEKA_CLIENT_SECRET_YAKO_HAPA";
+    $appName = "Dr william duka";
+
+    echo "<h2>Mchakato wa Malipo - Dr William Clinic</h2>";
+    echo "<p>Bidhaa: <b>" . htmlspecialchars($product) . "</b></p>";
+    echo "<p>1. Inaanza kuomba Access Token kutoka AzamPay...</p>";
+
+    // --- HATUA YA A: KUOMBA ACCESS TOKEN ---
+    $tokenUrl = "https://authenticator-sandbox.azampay.co.tz/AppAuthentication/generateToken";
+    
+    $tokenPayload = json_encode([
+        'appName' => $appName,
+        'clientId' => $clientId,
+        'clientSecret' => $clientSecret
+    ]);
+
+    $ch = curl_init($tokenUrl);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $tokenPayload);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    
+    $tokenResponse = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    $tokenResult = json_decode($tokenResponse, true);
+
+    if (!isset($tokenResult['data']['accessToken'])) {
+        echo "<b style='color:red;'>⚠️ IMEFELI KUPATA TOKEN!</b><br>";
+        echo "Hakikisha umebadilisha Client ID na Client Secret kwenye process_payment.php<br><br>";
+        echo "HTTP Code: " . $httpCode . "<br>";
+        echo "Majibu kutoka AzamPay: <pre>" . htmlspecialchars($tokenResponse) . "</pre>";
+        exit;
+    }
+
+    $accessToken = $tokenResult['data']['accessToken'];
+    echo "<b style='color:green;'>✓ Token Imepatikana Vizuri!</b><br><br>";
+
+    // --- HATUA YA B: KUTUMA OMBI LA CHECKOUT ---
+    echo "<p>2. Inatuma ombi la Checkout ($provider - TZS $amount)...</p>";
+
+    $checkoutUrl = "https://sandbox.azampay.co.tz/azampay/mno/checkout";
+
+    $paymentPayload = json_encode([
+        'accountNumber' => $phone,
+        'amount' => (string)$amount,
+        'currency' => 'TZS',
+        'externalId' => 'TEST-' . time(),
+        'provider' => $provider
+    ]);
+
+    $ch2 = curl_init($checkoutUrl);
+    curl_setopt($ch2, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch2, CURLOPT_POST, true);
+    curl_setopt($ch2, CURLOPT_POSTFIELDS, $paymentPayload);
+    curl_setopt($ch2, CURLOPT_HTTPHEADER, [
+        'Authorization: Bearer ' . $accessToken,
+        'Content-Type: application/json'
+    ]);
+    curl_setopt($ch2, CURLOPT_SSL_VERIFYPEER, false);
+
+    $paymentResponse = curl_exec($ch2);
+    $payHttpCode = curl_getinfo($ch2, CURLINFO_HTTP_CODE);
+    curl_close($ch2);
+
+    echo "<b style='color:green;'>✓ Ombi la Malipo Limetumwa AzamPay! (HTTP Code: $payHttpCode)</b><br>";
+    echo "<h4>Majibu kutoka AzamPay:</h4>";
+    echo "<pre style='background:#e9f5e9; padding:15px; border-radius:5px; border:1px solid #c3e6cb;'>" . htmlspecialchars($paymentResponse) . "</pre>";
+    
+    echo "<hr>";
+    echo "📌 <b>Hatua Inayofuata:</b> Fungua ukurasa wako wa <a href='https://webhook.site/aef6f3d0-791e-49a4-a9f3-4d5d4783b281' target='_blank'>Webhook.site</a> kuona taarifa zilizotumwa na AzamPay zikithibitisha muamala huu!";
+} else {
+    echo "Tafadhali tumia fomu ya <a href='index.php'>index.php</a> kulipa.";
+}
+?>
