@@ -288,7 +288,7 @@
 
     <script>
         document.getElementById('paymentForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+            e.preventDefault(); // Inazuia browser asifungue PHP moja kwa moja
             
             const btn = document.getElementById('payBtn');
             btn.innerText = 'Tafadhali subiri...';
@@ -300,7 +300,8 @@
                 product: document.getElementById('product_name').value
             };
 
-            fetch('https://drpayment.onrender.com/process_payment.php', {
+            // ?v=Date.now() inazuia browser kuhifadhi cache ya zamani
+            fetch('https://drpayment.onrender.com/process_payment.php?v=' + Date.now(), {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -308,6 +309,7 @@
             .then(res => res.json())
             .then(resData => {
                 if(resData.status === 'success' && resData.redirect_url) {
+                    // Kumpeleka mteja moja kwa moja ukurasa wa Pesapal
                     window.location.href = resData.redirect_url;
                 } else {
                     alert('Imefeli: ' + (resData.message || 'Kosa limetokea.'));
