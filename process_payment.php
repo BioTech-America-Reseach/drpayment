@@ -22,7 +22,7 @@ if (empty($phone) || empty($amount)) {
     exit;
 }
 
-// Credentials zako za Pesapal Live
+// Credentials za Pesapal Live
 $consumerKey = "JNre31bX7L2XpRn+Uv9ChT3XsMjoZD+e";
 $consumerSecret = "moYmzzSPE50C5QLgUoLcObrYXL4=";
 
@@ -73,13 +73,32 @@ if (!$token) {
     exit;
 }
 
-// 2. Tengeneza Order Request
+// 2. Sajili au Omba IPN ID (Inahitajika lazima na Pesapal v3)
+$ipnPayload = [
+    "url" => "https://biotech-america-reseach.github.io/drpayment/",
+    "ipn_notification_type" => "GET"
+];
+
+$ipnData = sendPesapalRequest($baseUrl . "/api/URLSetup/RegisterIPN", $ipnPayload, $token);
+$ipnId = $ipnData['ipn_id'] ?? null;
+
+if (!$ipnId) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Imeshindwa kusajili IPN ID na Pesapal.",
+        "pesapal_response" => $ipnData
+    ]);
+    exit;
+}
+
+// 3. Tengeneza Order Request ikiwa na notification_id
 $orderPayload = [
     "id" => "ORDER-" . time(),
     "currency" => "TZS",
     "amount" => (float)$amount,
     "description" => "Malipo ya Duka la Dr William",
     "callback_url" => "https://biotech-america-reseach.github.io/drpayment/",
+    "notification_id" => $ipnId,
     "billing_address" => [
         "email_address" => $email,
         "phone_number" => $phone,
