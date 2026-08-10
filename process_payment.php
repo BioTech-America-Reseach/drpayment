@@ -22,7 +22,7 @@ if (empty($phone) || empty($amount)) {
     exit;
 }
 
-// Pesapal Credentials Zako Halisi
+// Credentials zako za Pesapal Live
 $consumerKey = "JNre31bX7L2XpRn+Uv9ChT3XsMjoZD+e";
 $consumerSecret = "moYmzzSPE50C5QLgUoLcObrYXL4=";
 
