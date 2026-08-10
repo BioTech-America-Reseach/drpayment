@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// 1. Pokea data kutoka kwenye Form
+// 1. Pokea data kutoka kwenye Form au JSON Payload
 $input = json_decode(file_get_contents("php://input"), true);
 if (!$input) {
     $input = $_POST;
@@ -20,22 +20,22 @@ $amount = $input['amount'] ?? '';
 $provider = $input['provider'] ?? 'Airtel';
 
 if (empty($phone) || empty($amount)) {
-    echo json_encode(["status" => "error", "message" => "Taarifa hazijakamilika"]);
+    echo json_encode(["status" => "error", "message" => "Taarifa za namba ya simu au kiasi zimekosekana."]);
     exit;
 }
 
-// Rekebisha namba ya simu ianze na 255
+// Rekebisha namba ya simu ianze na format ya 255
 $phone = preg_replace('/[^0-9]/', '', $phone);
 if (substr($phone, 0, 1) == "0") {
     $phone = "255" . substr($phone, 1);
 }
 
-// 2. Taarifa Zako za AzamPay
+// 2. Taarifa Zako Mpya za AzamPay LIVE
 $appName = "Dr william duka";
 $clientId = "4748626c-10cd-4cc8-95d5-6f552733abf6";
-$clientSecret = "Zt2FEK4sXqJPSwJ8jHocXNgR46n0EK8PGJvGgbguXnlWF/mo4y/QIfa9JO9CVM+i+yQCiY4xM/yW/xaJkzx+eVNZ1neUIAd5Aopn+aLp0eLkbOsCRFBnSgK/dfVpPBKh+cSSwHSZ2kAmPvL+kWzr9Z/C6HJq6NYFVxTf9/gnn3WiFYyoQscBUNPVIXsmnji32ObBGk+qG3uR3iyiI8jw7Mw8p8b8MbBNx+NTG5JtK3j9L2NP1+0qJlYNBqLeS8PurisP2PJ02UZx9oG3sC+FNQP/SgnAX8nq2WmFW/NRDfc6RNOrx2eSX9Xo5xcfBVfuiGo7EPd/Bum8ifKltN6sEA24vYWkDaFFfUN/Q2om2xybV/rojekKkCFaXQBJDU0NyW8P12j8/+jQ/E4g8SxCAc2HElWuy/K0IOA6JnSztZqbHrDV0OYNsW8hbwmbUo0RsA09jHmcjPrg+od2J3j//PtqhU2nCTW39nmVC6VGjHfgtTQ6zLwGsrFq1FvdY12YcQ1SulA5pWhqFgaFNcXImvJKryyp0aaI3+fzJzMRq7qQ11SMAnGtLoxKPSxGaACh5qA9+nCFlvKGWKKyXmeRIOteQiBYIaCeifZ/j9JYAaDSoBgXCF0hVZzm3xwrDx5bjgQUltiyw8lS5syfy5/5ToaqrJMkrVDMjFDuGU7NmJk=";
+$clientSecret = "Ubvj8gP8cQu/dXBxuUT4LWv9Oha+gUTy22ZCfVse1fQTWjvzOPeBe8md4LPFLv2qYSGM4jlae9eVzYkhS8FyIQPbI8HbPeXR7aAIgz+cknNcfvrrpxX4wIdtsS1Nocm40sFbduAwGeSzVeEu1drwe/MParUXDshMBykexXsrFqie3BmhpDBElncusL+JepKMoB4y4R5ISFJJikqvXdDXu+YZbt6yXRa25Ze34pOg6lumn6+8d9ZbVcfxQr8yJQbGVevDwWRONJSNpiVrrPCF3sxE4htX6l58+AFsy+/WtrFO1wSG/CwTUKOnmt+m5g6fMM75qbhmv+Lc+wrjU4JDjptvSIVfqLAMl0KhY70bTstF+6e/MIkvxzzVuuc0sxF3mU4juRBVRXu0PqeuVvq5WV9lhzIf6DYvQrZIFDYyKAl+WFrlXZyeQVnOuFKwrDV88DHRqYr3IA/L9I4WPzROYiYieiNkYn7dHUc9CGMvOHoi3CIXfZg2lR1qCuHGXZEJwRbqrxtxglxyYQTbP4xJtg+ylhYhCy8rmXM4DXHQJsNhaiZ37czJ8aEDB08rQwEmw7+IRpfGOvzRXd4QmC7N+Js1KTTyy1R/bGK60DcwC/CaHUIXZiKT+MHfSp1wImd0MTSOh0ucavXg3sbOFmIoPCbjtts4OXV8tlWSbLvn+Vk=";
 
-// 3. Omba Access Token kutoka LIVE Authenticator ya AzamPay
+// 3. Pata Access Token kutoka AzamPay Authenticator
 $authUrl = "https://authenticator.azampay.co.tz/AppAuthentication/generateToken";
 $authPayload = json_encode([
     "appName" => trim($appName),
@@ -69,7 +69,7 @@ if (!$token) {
     exit;
 }
 
-// 4. Kutuma Ombi la Checkout kwenye AzamPay LIVE
+// 4. Tuma ombi la Checkout kwa MNO (Mobile Network Operator)
 $checkoutUrl = "https://checkout.azampay.co.tz/azampay/mno/checkout";
 $checkoutPayload = json_encode([
     "accountNumber" => $phone,
